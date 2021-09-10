@@ -3,3 +3,4 @@ class Game:
         self.name = name
         self.releaseDate = release_date
         self.price = price
+        self.description = None
