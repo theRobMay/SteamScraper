@@ -9,8 +9,8 @@ class SteamScraper:
         self.steam_search_url = steam_search_url
 
     @staticmethod
-    def _get_game_details(game_url):
-        page = requests.get(game_url)
+    def _add_game_details(game):
+        page = requests.get(game.storePageUrl)
         soup = BeautifulSoup(page.content, 'html.parser')
         glance = soup.find('div', class_='glance_ctn')
 
@@ -19,7 +19,7 @@ class SteamScraper:
             description = description.text.strip() if description is not None else ''
         else:
             description = ''
-        return description
+        game.description = description
 
     def get_games(self, top_recs=10):
         page = requests.get(self.steam_search_url)
@@ -43,11 +43,9 @@ class SteamScraper:
                 price_div.find('span').decompose()
             price = price_div.text.strip()
 
-            game = Game(title, release_date, price)
-
             game_url = game_row.get('href')
-            description = self._get_game_details(game_url)
-            game.description = description
 
+            game = Game(game_url, title, release_date, price)
+            self._add_game_details(game)
             games.append(game)
         return games
