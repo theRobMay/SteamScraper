@@ -14,12 +14,21 @@ class SteamScraper:
         soup = BeautifulSoup(page.content, 'html.parser')
         glance = soup.find('div', class_='glance_ctn')
 
-        if glance is not None:
-            description = glance.find('div', class_='game_description_snippet')
-            description = description.text.strip() if description is not None else ''
-        else:
-            description = ''
+        if glance is None:
+            return
+
+        # Get description
+        description = glance.find('div', class_='game_description_snippet')
+        description = description.text.strip() if description is not None else None
         game.description = description
+
+        # Get review line
+        review_div = glance.find(id='userReviews')
+        review_summary_div = review_div.find('div', class_='summary column') if review_div is not None else None
+        review = review_summary_div.text.replace('\n', '').replace('\t', '').replace('\r', ' ').strip() if review_summary_div is not None else None
+        while '  ' in review:
+            review = review.replace('  ', ' ')
+        game.reviewSummary = review
 
     def get_games(self, top_recs=10):
         page = requests.get(self.steam_search_url)

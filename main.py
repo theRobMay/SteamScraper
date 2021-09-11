@@ -9,8 +9,8 @@ if __name__ == '__main__':
     games = scraper.get_games()
 
     games_table = PrettyTable()
-    games_table.field_names = ['Name', 'Release Date', 'Price', 'Description']
+    games_table.field_names = ['Name', 'Release Date', 'Price', 'Description', 'Reviews']
     for game in games:
-        games_table.add_row([game.name, game.releaseDate, game.price, game.description])
+        games_table.add_row([game.name, game.releaseDate, game.price, game.description, game.reviewSummary])
 
     print(games_table)

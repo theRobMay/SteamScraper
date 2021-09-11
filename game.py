@@ -6,3 +6,4 @@ class Game:
         self.price = price
 
         self.description = None
+        self.reviewSummary = None
